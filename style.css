@@ -40,20 +40,35 @@ button:hover {
     background: #c0392b;
 }
 
-video, canvas {
-    max-width: 100%;
-    height: auto;
+#gameArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+video {
+    max-width: 300px;
     border-radius: 8px;
     border: 3px solid #fff;
-    display: block;
-    margin: 10px auto;
+}
+
+canvas {
+    display: none;
+}
+
+#shootBtn {
+    height: 50px;
+    font-size: 18px;
 }
 
 #scoreboard {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 10px;
+    display: none;
+    background: rgba(0,0,0,0.6);
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 300px;
+    margin: auto;
 }
 
 .score-entry {

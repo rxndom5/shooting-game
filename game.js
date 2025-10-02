@@ -2,7 +2,8 @@ const socket = io();
 let myColor = null;
 
 const video = document.getElementById("camera");
-const canvas = document.getElementById("canvas");
+const scoreboard = document.getElementById("scoreboard");
+const canvas = document.createElement("canvas"); // hidden canvas
 const ctx = canvas.getContext("2d");
 
 document.getElementById("joinBtn").onclick = () => {
@@ -12,7 +13,11 @@ document.getElementById("joinBtn").onclick = () => {
 };
 
 document.getElementById("shootBtn").onclick = () => {
-    detectTargetColor();
+    detectOtherColors();
+};
+
+document.getElementById("scoreboardBtn").onclick = () => {
+    scoreboard.style.display = scoreboard.style.display === "block" ? "none" : "block";
 };
 
 socket.on("updatePlayers", (players) => {
@@ -24,7 +29,6 @@ socket.on("gameOver", (winnerColor) => {
 });
 
 function updateScoreboard(players) {
-    let scoreboard = document.getElementById("scoreboard");
     scoreboard.innerHTML = "";
     for (let id in players) {
         let p = players[id];
@@ -47,7 +51,7 @@ function startCamera() {
         });
 }
 
-function detectTargetColor() {
+function detectOtherColors() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -68,7 +72,10 @@ function detectTargetColor() {
         else if (r > 150 && g > 150 && b < 100) colorCounts.yellow++;
     }
 
-    let targetColor = Object.keys(colorCounts).reduce((a, b) => colorCounts[a] > colorCounts[b] ? a : b);
+    // Find strongest color that is NOT player's own color
+    let targetColor = Object.keys(colorCounts)
+        .filter(c => c !== myColor)
+        .reduce((a, b) => colorCounts[a] > colorCounts[b] ? a : b);
 
     console.log("Detected target color:", targetColor);
     socket.emit("shoot", targetColor);
