@@ -17,7 +17,7 @@ document.getElementById("shootBtn").onclick = () => {
 };
 
 document.getElementById("scoreboardBtn").onclick = () => {
-    scoreboard.style.display = scoreboard.style.display === "block" ? "none" : "block";
+    scoreboard.style.display = (scoreboard.style.display === "block") ? "none" : "block";
 };
 
 document.getElementById("fullscreenBtn").onclick = () => {
