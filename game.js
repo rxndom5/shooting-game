@@ -20,6 +20,10 @@ document.getElementById("scoreboardBtn").onclick = () => {
     scoreboard.style.display = scoreboard.style.display === "block" ? "none" : "block";
 };
 
+document.getElementById("fullscreenBtn").onclick = () => {
+    toggleFullScreen();
+};
+
 socket.on("updatePlayers", (players) => {
     updateScoreboard(players);
 });
@@ -79,4 +83,25 @@ function detectOtherColors() {
 
     console.log("Detected target color:", targetColor);
     socket.emit("shoot", targetColor);
+}
+
+function toggleFullScreen() {
+    const doc = document.documentElement;
+    if (!document.fullscreenElement) {
+        if (doc.requestFullscreen) {
+            doc.requestFullscreen();
+        } else if (doc.webkitRequestFullscreen) { /* Safari */
+            doc.webkitRequestFullscreen();
+        } else if (doc.msRequestFullscreen) { /* IE11 */
+            doc.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
 }

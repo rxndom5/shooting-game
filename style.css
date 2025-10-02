@@ -89,3 +89,11 @@ canvas {
     color: #e74c3c;
     text-decoration: line-through;
 }
+#fullscreenBtn {
+    background: #3498db;
+    color: white;
+}
+
+#fullscreenBtn:hover {
+    background: #2980b9;
+}
