@@ -5,6 +5,7 @@ const video = document.getElementById("camera");
 const scoreboard = document.getElementById("scoreboard");
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
+const gunshotSound = new Audio("sound/gun.mp3");
 
 document.getElementById("joinBtn").onclick = () => {
     myColor = document.getElementById("colorPicker").value;
@@ -13,8 +14,11 @@ document.getElementById("joinBtn").onclick = () => {
 };
 
 document.getElementById("shootBtn").onclick = () => {
+    gunshotSound.currentTime = 0; // rewind sound
+    gunshotSound.play();
     detectOtherColors();
 };
+
 
 document.getElementById("scoreboardBtn").onclick = () => {
     scoreboard.style.display = (scoreboard.style.display === "block") ? "none" : "block";
