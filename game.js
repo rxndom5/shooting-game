@@ -3,7 +3,7 @@ let myColor = null;
 
 const video = document.getElementById("camera");
 const scoreboard = document.getElementById("scoreboard");
-const canvas = document.createElement("canvas"); // hidden canvas
+const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
 document.getElementById("joinBtn").onclick = () => {
@@ -56,11 +56,17 @@ function startCamera() {
 }
 
 function detectOtherColors() {
+    if (!video.videoWidth || !video.videoHeight) return;
+
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const centerX = Math.floor(canvas.width / 2);
+    const centerY = Math.floor(canvas.height / 2);
+
+    const sampleSize = 5; // small area around crosshair
+    const imageData = ctx.getImageData(centerX - 2, centerY - 2, sampleSize, sampleSize);
     const data = imageData.data;
 
     const colorCounts = { red: 0, blue: 0, green: 0, yellow: 0 };
@@ -76,32 +82,27 @@ function detectOtherColors() {
         else if (r > 150 && g > 150 && b < 100) colorCounts.yellow++;
     }
 
-    // Find strongest color that is NOT player's own color
     let targetColor = Object.keys(colorCounts)
-        .filter(c => c !== myColor)
-        .reduce((a, b) => colorCounts[a] > colorCounts[b] ? a : b);
+        .filter(c => c !== myColor && colorCounts[c] > 0)
+        .reduce((a, b) => colorCounts[a] > colorCounts[b] ? a : b, null);
 
-    console.log("Detected target color:", targetColor);
-    socket.emit("shoot", targetColor);
+    if (targetColor) {
+        console.log("Detected target color:", targetColor);
+        socket.emit("shoot", targetColor);
+    } else {
+        console.log("No valid target detected");
+    }
 }
 
 function toggleFullScreen() {
     const doc = document.documentElement;
     if (!document.fullscreenElement) {
-        if (doc.requestFullscreen) {
-            doc.requestFullscreen();
-        } else if (doc.webkitRequestFullscreen) { /* Safari */
-            doc.webkitRequestFullscreen();
-        } else if (doc.msRequestFullscreen) { /* IE11 */
-            doc.msRequestFullscreen();
-        }
+        if (doc.requestFullscreen) doc.requestFullscreen();
+        else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+        else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
     }
 }

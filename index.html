@@ -2,12 +2,12 @@
 <html>
 <head>
     <title>Multiplayer Shooting Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>🎯 Multiplayer Shooting Game</h1>
 
-    <!-- SINGLE controls section -->
     <div id="controls">
         <label>Select Color:</label>
         <select id="colorPicker">
@@ -22,7 +22,10 @@
     </div>
 
     <div id="gameArea">
-        <video id="camera" autoplay playsinline muted></video>
+        <div id="cameraContainer">
+            <video id="camera" autoplay playsinline muted></video>
+            <div id="crosshair"></div>
+        </div>
         <button id="shootBtn">Shoot 🎯</button>
     </div>
 
