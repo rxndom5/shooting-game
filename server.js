@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
@@ -19,12 +18,22 @@ io.on("connection", (socket) => {
     socket.on("shoot", (targetColor) => {
         console.log("Shoot:", targetColor);
 
-        // Check if target exists and is alive
-        let targetId = Object.keys(players).find(id => players[id].color === targetColor && players[id].alive);
+        // Find the alive target player with that color
+        let targetId = Object.keys(players).find(
+            id => players[id].color === targetColor && players[id].alive
+        );
 
         if (targetId) {
+            // Mark them dead
             players[targetId].alive = false;
+
+            // Notify *that specific player* they are eliminated
+            io.to(targetId).emit("eliminated");
+
+            // Update scoreboard for everyone
             io.emit("updatePlayers", players);
+
+            // Check if the game is over
             checkGameOver();
         } else {
             console.log("No alive player with color", targetColor);

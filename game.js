@@ -32,6 +32,11 @@ socket.on("gameOver", (winnerColor) => {
     alert("Game Over! Winner: " + winnerColor);
 });
 
+// 🚨 New event: when THIS player is eliminated
+socket.on("eliminated", () => {
+    alert("❌ You are eliminated!");
+});
+
 function updateScoreboard(players) {
     scoreboard.innerHTML = "";
     for (let id in players) {
@@ -65,7 +70,7 @@ function detectOtherColors() {
     const centerX = Math.floor(canvas.width / 2);
     const centerY = Math.floor(canvas.height / 2);
 
-    const sampleSize = 5; // small area around crosshair
+    const sampleSize = 5;
     const imageData = ctx.getImageData(centerX - 2, centerY - 2, sampleSize, sampleSize);
     const data = imageData.data;
 
